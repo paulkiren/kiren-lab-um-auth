@@ -1,0 +1,19 @@
+
+# application.yml
+server:
+  port: 8080
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/authdb
+    username: auth_user
+    password: auth_pass
+  jpa:
+    hibernate:
+      ddl-auto: update
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://auth-server:8080
+          jwk-set-uri: http://auth-server:8080/.well-known/jwks.json
