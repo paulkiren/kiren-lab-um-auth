@@ -1,0 +1,38 @@
+# Service Registry Configuration (service-registry/src/main/resources/application.yml)
+server:
+  port: 8761
+
+spring:
+  application:
+    name: service-registry
+
+eureka:
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+  server:
+    waitTimeInMsWhenSyncEmpty: 0
+    
+# Auth Service Eureka Client Configuration (auth-service/src/main/resources/application.yml)
+spring:
+  application:
+    name: auth-service
+  
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    preferIpAddress: true
+
+# User Service Eureka Client Configuration (user-service/src/main/resources/application.yml)
+spring:
+  application:
+    name: user-service
+  
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    preferIpAddress: true
