@@ -1,0 +1,39 @@
+# Java / Spring Boot
+target/
+*.jar
+*.war
+*.iml
+*.class
+
+# Node.js / Express
+node_modules/
+.env
+
+# Logs
+logs/
+*.log
+
+# IntelliJ
+.idea/
+*.iws
+*.ipr
+*.iml
+out/
+
+# Eclipse
+.classpath
+.project
+.settings/
+bin/
+target/
+*.launch
+*.log
+*.properties
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Gradle
+.gradle/
+build/
