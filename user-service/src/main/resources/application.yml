@@ -1,15 +1,14 @@
-# application.yml
 server:
   port: 8081
 
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/userdb
-    username: user_service
-    password: user_pass
+    username: postgres
+    password: password
+    driver-class-name: org.postgresql.Driver
   jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true

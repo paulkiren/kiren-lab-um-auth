@@ -1,42 +1,45 @@
+package com.kirenlab.userservice.controller;
 
+import com.kirenlab.userservice.model.User;
+import com.kirenlab.userservice.service.UserService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-// UserController.java
+import java.util.List;
+import java.util.Optional;
+
 @RestController
-@RequestMapping("/api/users")
-@RequiredArgsConstructor
+@RequestMapping("/users")
 public class UserController {
-    
+
     private final UserService userService;
-    
-    @GetMapping("/{id}")
-    public ResponseEntity<UserResponse> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.getUserById(id));
+
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
-    
+
     @GetMapping
-    public ResponseEntity<Page<UserResponse>> getAllUsers(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(userService.getAllUsers(page, size));
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
-    
-    @PutMapping("/{id}")
-    public ResponseEntity<UserResponse> updateUser(
-            @PathVariable Long id,
-            @Valid @RequestBody UpdateUserRequest request) {
-        return ResponseEntity.ok(userService.updateUser(id, request));
+
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return userService.getUserById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
-    
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
-        userService.deleteUser(id);
-        return ResponseEntity.noContent().build();
-    }
-    
-    @PatchMapping("/{id}/roles")
-    public ResponseEntity<UserResponse> updateUserRoles(
-            @PathVariable Long id,
-            @RequestBody UpdateRolesRequest request) {
-        return ResponseEntity.ok(userService.updateRoles(id, request));
+
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(@RequestBody User user) {
+        if (userService.isUsernameTaken(user.getUsername())) {
+            return ResponseEntity.badRequest().body("Username is already taken.");
+        }
+        if (userService.isEmailTaken(user.getEmail())) {
+            return ResponseEntity.badRequest().body("Email is already in use.");
+        }
+
+        userService.registerUser(user);
+        return ResponseEntity.ok("User registered successfully.");
     }
 }
