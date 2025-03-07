@@ -31,7 +31,9 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .antMatchers("/auth/login", "/users/register").permitAll() // Allow login & register
+                .antMatchers("/auth/login", "/users/register", 
+                             "/v2/api-docs", "/swagger-resources/**", 
+                             "/swagger-ui/**", "/webjars/**", "/swagger-ui.html").permitAll() // Allow login, register, and Swagger
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
