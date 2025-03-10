@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
+import java.util.Collections;
 
 @Configuration
 public class SecurityConfig {
@@ -34,7 +35,8 @@ public class SecurityConfig {
                 .antMatchers("/auth/login", "/users/register", 
                              "/v2/api-docs", "/swagger-resources/**", 
                              "/swagger-ui/**", "/webjars/**", "/swagger-ui.html").permitAll() // Allow login, register, and Swagger
-                .anyRequest().authenticated()
+                .antMatchers("/admin/**").hasAuthority("ADMIN") // Admin-only access
+                .anyRequest().authenticated() // Other APIs require authentication
             )
             .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
@@ -57,9 +59,10 @@ class JwtFilter extends OncePerRequestFilter {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
             String username = jwtUtil.extractUsername(token);
+            String role = jwtUtil.extractRole(token); // Extract role from token
             if (username != null) {
                 UsernamePasswordAuthenticationToken authToken = 
-                        new UsernamePasswordAuthenticationToken(username, null, null);
+                        new UsernamePasswordAuthenticationToken(username, null, Collections.singletonList(() -> role)); // Use Collections.singletonList
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
