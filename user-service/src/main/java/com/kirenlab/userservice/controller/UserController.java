@@ -3,6 +3,7 @@ package com.kirenlab.userservice.controller;
 import com.kirenlab.userservice.model.User;
 import com.kirenlab.userservice.service.UserService;
 import com.kirenlab.userservice.repository.UserRepository;
+import com.kirenlab.userservice.exception.UserNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,9 +33,9 @@ public class UserController {
 
     @GetMapping("/{id}")
     public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        return userService.getUserById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
+        return ResponseEntity.ok(user);
     }
 
     @PostMapping("/register")
@@ -60,4 +61,39 @@ public class UserController {
 
         return ResponseEntity.ok("User registered successfully with role: " + role);
     }
+
+    @PutMapping("/{id}")
+public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody Map<String, String> updates) {
+    User user = userRepository.findById(id)
+            .orElseThrow(() -> new UserNotFoundException("User with ID " + id + " not found"));
+
+    if (updates.containsKey("email")) {
+        user.setEmail(updates.get("email"));
+    }
+
+    if (updates.containsKey("password")) {
+        user.setPassword(new BCryptPasswordEncoder().encode(updates.get("password")));
+    }
+
+    userRepository.save(user);
+    return ResponseEntity.ok(user);
+}
+@PostMapping("/reset-password")
+public ResponseEntity<String> resetPassword(@RequestBody Map<String, String> request) {
+    String username = request.get("username");
+    Optional<User> optionalUser = userRepository.findByUsername(username);
+
+    if (optionalUser.isEmpty()) {
+        throw new UserNotFoundException("User with username " + username + " not found");
+    }
+
+    User user = optionalUser.get();
+    String newPassword = request.get("newPassword");
+    user.setPassword(new BCryptPasswordEncoder().encode(newPassword));
+
+    userRepository.save(user);
+    return ResponseEntity.ok("Password updated successfully");
+}
+
+
 }

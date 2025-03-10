@@ -34,10 +34,11 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .antMatchers("/auth/login", "/users/register", 
                              "/v2/api-docs", "/swagger-resources/**", 
-                             "/swagger-ui/**", "/webjars/**", "/swagger-ui.html").permitAll() // Allow login, register, and Swagger
+                             "/swagger-ui/**", "/webjars/**", "/swagger-ui.html").permitAll()
                 .antMatchers("/admin/**").hasAuthority("ADMIN") // Admin-only access
-                .anyRequest().authenticated() // Other APIs require authentication
-            )
+                .antMatchers("/users/**").hasAuthority("USER") // Allow USER role to access user endpoints
+                .anyRequest().authenticated()
+    )
             .addFilterBefore(new JwtFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
