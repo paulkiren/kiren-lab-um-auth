@@ -24,7 +24,10 @@ jobs:
 
       - name: Build and run tests
         run: mvn clean package -DskipTests=false
-        working-directory: user-service  # 👈 Fix: Run Maven in correct directory
+        working-directory: user-service  # 👈 Fix: Run Maven inside user-service
+
+      - name: Verify JAR file exists
+        run: ls -l user-service/target/  # 👈 Debugging step
 
   docker-build:
     needs: build-test
@@ -41,5 +44,5 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/user-service:latest user-service
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/user-service:latest -f user-service/Dockerfile user-service
           docker push ${{ secrets.DOCKER_USERNAME }}/user-service:latest
