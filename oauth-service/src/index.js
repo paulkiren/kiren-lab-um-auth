@@ -35,6 +35,10 @@ app.get('/secure', (req, res) => {
     });
 });
 
+app.get('/test', (req, res) => {
+  res.json({ message: 'API is working' });
+});
+
 app.listen(3000, () => {
   console.log('OAuth service is running on port 3000');
 });
