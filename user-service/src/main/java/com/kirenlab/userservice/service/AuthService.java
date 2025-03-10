@@ -3,12 +3,10 @@ package com.kirenlab.userservice.service;
 import com.kirenlab.userservice.model.User;
 import com.kirenlab.userservice.repository.UserRepository;
 import com.kirenlab.userservice.utils.JwtUtil;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -35,6 +33,8 @@ public class AuthService {
             throw new RuntimeException("Invalid credentials");
         }
 
-        return jwtUtil.generateToken(username);
+        // Assuming the user has a single role
+        String role = user.getRole().name();
+        return jwtUtil.generateToken(username, Collections.singletonList(role));
     }
 }
