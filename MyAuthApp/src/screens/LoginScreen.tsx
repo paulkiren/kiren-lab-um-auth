@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { loginRequest } from '../store/authSlice';
+import React, {useState} from 'react';
+import {View, Text, TextInput, Button, StyleSheet, Image} from 'react-native';
+import {useDispatch} from 'react-redux';
+import {loginRequest} from '../store/authSlice';
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
@@ -9,22 +9,47 @@ const LoginScreen = () => {
   const dispatch = useDispatch();
 
   const handleLogin = () => {
-    dispatch(loginRequest({ username, password }));
+    dispatch(loginRequest({username, password}));
   };
 
   return (
     <View style={styles.container}>
-      <Text>Login</Text>
-      <TextInput placeholder="Username" onChangeText={setUsername} style={styles.input} />
-      <TextInput placeholder="Password" onChangeText={setPassword} secureTextEntry style={styles.input} />
+      <Image source={require('../../assets/logo.png')} style={styles.logo} />
+      <TextInput
+        placeholder="Username"
+        onChangeText={setUsername}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Password"
+        onChangeText={setPassword}
+        secureTextEntry
+        style={styles.input}
+      />
       <Button title="Login" onPress={handleLogin} />
+      <Text style={styles.forgotPassword}>Forgot Password?</Text>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  input: { width: 200, borderWidth: 1, marginBottom: 10, padding: 5 },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+  },
+  logo: {width: 100, height: 100, marginBottom: 20},
+  input: {
+    width: '80%',
+    borderWidth: 1,
+    borderColor: '#ddd',
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 5,
+    backgroundColor: '#fafafa',
+  },
+  forgotPassword: {color: '#3897f0', marginTop: 15},
 });
 
 export default LoginScreen;
