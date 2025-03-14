@@ -12,7 +12,7 @@ function* loginSaga(action) {
     yield AsyncStorage.setItem('token', response.accessToken);
     yield put(loginSuccess(response));
     if (navigationRef.current?.isReady()) {
-      navigationRef.current?.navigate('Home');
+      navigationRef.current?.navigate('HomeTabs');
     }
   } catch (error) {
     yield put(loginFailure(error.message));

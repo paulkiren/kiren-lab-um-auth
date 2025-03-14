@@ -14,7 +14,7 @@ const HomeScreen: React.FC = () => {
     const handleLogout = () => {
         AsyncStorage.removeItem('token');
         console.log('User logged out');
-        navigation.navigate({name:'Login'});
+        navigation.goBack();
     };
 
     return (
