@@ -11,7 +11,9 @@ function* loginSaga(action) {
     console.log("Response HAHAH",response);
     yield AsyncStorage.setItem('token', response.accessToken);
     yield put(loginSuccess(response));
-    navigationRef.current?.navigate('Home');
+    if (navigationRef.current?.isReady()) {
+      navigationRef.current?.navigate('Home');
+    }
   } catch (error) {
     yield put(loginFailure(error.message));
   }
