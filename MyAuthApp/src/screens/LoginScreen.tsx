@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#fff',
   },
-  logo: {width: 100, height: 100, marginBottom: 20},
+  logo: {width: 220, height: 220, marginBottom: 20},
   input: {
     width: '80%',
     borderWidth: 1,
