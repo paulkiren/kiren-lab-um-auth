@@ -1,25 +1,27 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const { token } = require('./controllers/authController');
 const { oauth, Request, Response } = require('./oauthServer');
 
 const app = express();
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
 
-app.post('/oauth/token', (req, res) => {
-  const request = new Request(req);
-  const response = new Response(res);
-
-  oauth
-    .token(request, response)
-    .then((token) => {
-      res.json(token);
-    })
-    .catch((err) => {
-      res.status(err.code || 500).json(err);
-    });
+app.post('/users/register', (req, res) => {
+  // Handle user registration
+  const { username, password, email } = req.body;
+  // Add user to the database
+  res.status(201).send('User registered successfully');
 });
+
+app.post('/clients/register', (req, res) => {
+  // Handle client registration
+  const { clientId, clientSecret } = req.body;
+  // Add client to the database
+  res.status(201).send('Client registered successfully');
+});
+
+app.post('/oauth/token', token);
 
 app.get('/secure', (req, res) => {
   const request = new Request(req);
@@ -33,10 +35,6 @@ app.get('/secure', (req, res) => {
     .catch((err) => {
       res.status(err.code || 500).json(err);
     });
-});
-
-app.get('/test', (req, res) => {
-  res.json({ message: 'API is working' });
 });
 
 app.listen(3000, () => {
