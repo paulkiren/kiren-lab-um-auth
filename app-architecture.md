@@ -53,6 +53,7 @@
                            │  (Postgres) │
                            │             │
                            └─────────────┘
+```
 
 ## Communication Patterns
 

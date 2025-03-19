@@ -1,16 +1,24 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, TextInput, Button, StyleSheet, Image} from 'react-native';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import {loginRequest} from '../store/authSlice';
 
 const LoginScreen = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const dispatch = useDispatch();
+  const authError = useSelector(state => state.auth.error);
 
   const handleLogin = () => {
     dispatch(loginRequest({username, password}));
   };
+
+  useEffect(() => {
+    if (authError) {
+      setErrorMessage(authError);
+    }
+  }, [authError]);
 
   return (
     <View style={styles.container}>
@@ -26,6 +34,7 @@ const LoginScreen = () => {
         secureTextEntry
         style={styles.input}
       />
+      {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
       <Button title="Login" onPress={handleLogin} />
       <Text style={styles.forgotPassword}>Forgot Password?</Text>
     </View>
@@ -50,6 +59,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fafafa',
   },
   forgotPassword: {color: '#3897f0', marginTop: 15},
+  error: {
+    color: 'red',
+    marginBottom: 10,
+  },
 });
 
 export default LoginScreen;

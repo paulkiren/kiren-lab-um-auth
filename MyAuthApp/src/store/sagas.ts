@@ -15,7 +15,8 @@ function* loginSaga(action) {
       navigationRef.current?.navigate('HomeTabs');
     }
   } catch (error) {
-    yield put(loginFailure(error.message));
+    const errorMessage = error.response?.data?.message || error.message;
+    yield put(loginFailure(errorMessage));
   }
 }
 
